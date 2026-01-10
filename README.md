@@ -30,13 +30,13 @@ It reduces manual checking and provides quick results.
 ## Screenshots
 
 ### Home Page
-![Home Page](screenshots/home.png)
+![Home Page](screenshot/home.png)
 
 ### About Page
-![About Page](screenshots/about.png)
+![About Page](screenshot/about.png)
 
 ### Disease Detection Page
-![Detection Page](screenshots/detect.png)
+![Detection Page](screenshot/detect.png)
 
 ---
 
