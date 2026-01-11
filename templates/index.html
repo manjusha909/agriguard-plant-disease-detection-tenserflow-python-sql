@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AgriGuard - Crop Disease Detection</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* GENERAL RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+body { background: #f0f5f0; color: #333; line-height: 1.6; }
+a { text-decoration: none; }
+
+/* HERO SECTION */
+.hero {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 100px 50px;
+    background: url("{{ url_for('static', filename='images/indeximg.jpg') }}") no-repeat center center/cover;
+    color: white;
+    position: relative;
+}
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+}
+.hero-content {
+    position: relative;
+    max-width: 600px;
+    z-index: 2;
+}
+.hero-content h1 {
+    font-size: 50px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 12px rgba(0,0,0,0.5);
+}
+.hero-content p {
+    font-size: 20px;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 8px rgba(0,0,0,0.4);
+}
+.hero-content button {
+    padding: 15px 35px;
+    background: #38b000;
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+.hero-content button:hover {
+    background: #2d8f1a;
+    transform: translateY(-3px);
+}
+.hero-image {
+    position: relative;
+    max-width: 500px;
+    z-index: 2;
+}
+.hero-image img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+/* SECTIONS */
+section { padding: 80px 50px; max-width: 1200px; margin: auto; }
+section h2 { font-size: 40px; margin-bottom: 40px; text-align: center; color: #2b8a3e; font-weight: 700; }
+section p { font-size: 18px; max-width: 900px; margin: auto; text-align: center; line-height: 1.8; }
+
+/* ABOUT */
+.about-container { display: flex; flex-wrap: wrap; gap: 50px; align-items: center; }
+.about-container img { flex: 1; min-width: 300px; border-radius: 20px; box-shadow: 0 10px 35px rgba(0,0,0,0.2); }
+.about-content { flex: 1; min-width: 300px; }
+.about-content ul { list-style: none; padding: 0; margin-top: 25px; font-size: 16px; }
+.about-content ul li::before { content: '✔'; color: #38b000; margin-right: 12px; }
+
+/* PREDICTION FORM */
+.prediction-form {
+    text-align: center;
+    max-width: 500px;
+    margin: 30px auto 0 auto;
+    padding: 40px 30px;
+    background: white;
+    border-radius: 25px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+}
+.prediction-form h2 { font-size: 32px; margin-bottom: 25px; color: #2b8a3e; }
+.prediction-form input[type=file] { padding: 12px; width: 100%; border-radius: 10px; border: 1px solid #ccc; margin-bottom: 20px; }
+.prediction-form button { padding: 12px 25px; background: #2b8a3e; border: none; border-radius: 50px; color: white; font-size: 16px; cursor: pointer; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: all 0.3s; }
+.prediction-form button:hover { background: #256f35; transform: translateY(-3px); }
+.prediction-form img { margin-top: 25px; width: 300px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+
+/* CROPS */
+.crops { display: flex; justify-content: center; flex-wrap: wrap; gap: 25px; margin-top: 30px; }
+.crops img { width: 250px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); transition: transform 0.3s, box-shadow 0.3s; }
+.crops img:hover { transform: scale(1.07); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
+
+/* PREVENTION */
+.prevention { max-width: 700px; margin: auto; }
+.prevention p { font-size: 18px; margin: 10px 0; padding-left: 25px; position: relative; }
+.prevention p::before { content: '✔'; color: #38b000; position: absolute; left: 0; font-weight: 700; }
+
+/* LOGOUT */
+.logout { display: block; text-align: center; margin: 50px auto 20px auto; font-weight: bold; color: #ff4d4d; font-size: 18px; transition: 0.3s; }
+.logout:hover { color: #cc0000; }
+
+/* SCROLL ANIMATION */
+.highlight { background: rgba(56,176,0,0.1); transition: background 0.5s; }
+
+/* RESPONSIVE */
+@media(max-width: 900px){
+    .hero { flex-direction: column; padding: 80px 20px; }
+    .hero-content h1 { font-size: 36px; }
+    .about-container { flex-direction: column; gap: 30px; }
+    .crops img { width: 200px; }
+    .prediction-form img { width: 90%; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-content">
+        <h1>Your Crop Doctor 🌿</h1>
+        <p>AgriGuard is an AI-powered crop disease detection system. Upload leaf images and instantly get disease predictions to protect your crops and increase yield.</p>
+        <button id="predictBtn">Predict Now</button>
+    </div>
+    <div class="hero-image">
+        <img src="{{ url_for('static', filename='images/m.png') }}" alt="Plant Detection">
+    </div>
+</div>
+
+<!-- ABOUT -->
+<section>
+    <div class="about-container">
+        <img src="{{ url_for('static', filename='images/image.png') }}" alt="About AgriGuard">
+        <div class="about-content">
+            <h2>🌱 About AgriGuard</h2>
+            <p>AgriGuard is an AI-powered crop disease detection system designed for farmers, agronomists, and plant enthusiasts. Using advanced deep learning models trained on thousands of leaf images, it quickly detects common crop diseases and provides actionable preventive measures.</p>
+            <ul>
+                <li>Detect diseases instantly from leaf images</li>
+                <li>Increase crop yield with timely interventions</li>
+                <li>Access recommendations for prevention and treatment</li>
+                <li>User-friendly mobile and web interface</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- PREDICTION FORM -->
+<section id="prediction">
+    <div class="prediction-form">
+        <h2>🔍 PREDICT NOW – UPLOAD LEAF IMAGE</h2>
+        <form method="POST" enctype="multipart/form-data" action="#prediction">
+            <input type="file" name="image" required><br>
+            <button type="submit">Predict Disease</button>
+        </form>
+
+        {% if image_path %}
+            <h3>Uploaded Image:</h3>
+            <img src="/{{ image_path }}">
+            <h3>Prediction: <span style="color: #2b8a3e">{{ prediction }}</span></h3>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CROPS -->
+<section>
+    <h2>🌾 Common Crops</h2>
+    <div class="crops">
+        <img src="{{ url_for('static', filename='images/pereper.JPG') }}" alt="Tomato">
+        <img src="{{ url_for('static', filename='images/k.JPG') }}" alt="Potato">
+        <img src="{{ url_for('static', filename='images/p.JPG') }}" alt="Corn">
+    </div>
+</section>
+
+<!-- PREVENTION -->
+<section class="prevention">
+    <h2>🛡 Prevention Methods</h2>
+    <p>Use disease-resistant seeds</p>
+    <p>Maintain proper irrigation and drainage</p>
+    <p>Remove infected leaves immediately</p>
+    <p>Use organic pesticides when needed</p>
+    <p>Maintain proper spacing between plants</p>
+    <p>Monitor for insects and pests regularly</p>
+    <p>Apply fertilizers correctly to boost plant immunity</p>
+</section>
+
+<a href="/logout" class="logout">Logout</a>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const predictBtn = document.getElementById('predictBtn');
+    const predictionSection = document.getElementById('prediction');
+
+    predictBtn.addEventListener('click', () => {
+        predictionSection.scrollIntoView({ behavior: 'smooth' });
+        predictionSection.classList.add('highlight');
+        setTimeout(() => predictionSection.classList.remove('highlight'), 1500);
+    });
+});
+</script>
+
+</body>
+</html>

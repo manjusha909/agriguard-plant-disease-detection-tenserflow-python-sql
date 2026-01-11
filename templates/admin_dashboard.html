@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+<style>
+body { font-family: Arial; background: #c3f1c3ff; padding: 20px; }
+h1 { color: #2c3e50; }
+table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
+th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+th { background: #2980b9; color: white; }
+.logout { color: red; font-weight: bold; text-decoration: none; }
+a.delete { color: red; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>Admin Dashboard</h1>
+<a href="{{ url_for('admin_logout') }}" class="logout">Logout</a>
+
+
+<h2>Registered Users</h2>
+<table>
+<tr><th>ID</th><th>Name</th><th>Email</th><th>Actions</th></tr>
+{% for user in users %}
+<tr>
+<td>{{ user[0] }}</td>
+<td>{{ user[1] }}</td>
+<td>{{ user[2] }}</td>
+<td>
+<a href="/admin/delete_user/{{ user[0] }}" class="delete">Delete</a>
+</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2>Predictions</h2>
+<table>
+<tr><th>ID</th><th>User</th><th>Image</th><th>Result</th><th>Actions</th></tr>
+{% for pred in predictions %}
+<tr>
+<td>{{ pred[0] }}</td>
+<td>{{ pred[1] }}</td>
+<td><img src="/{{ pred[2] }}" width="100"></td>
+<td>{{ pred[3] }}</td>
+<td><a href="/admin/delete_prediction/{{ pred[0] }}" class="delete">Delete</a></td>
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>
